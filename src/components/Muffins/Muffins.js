@@ -4,7 +4,6 @@ import { selectMuffinsArray } from '../../redux/selectors';
 import { likeMuffin } from '../../redux/actions';
 
 const Muffins = () => {
-    // console.log(useSelector(state => state.muffins));
     const muffins = useSelector(selectMuffinsArray);
     const dispatch = useDispatch();
     return (
