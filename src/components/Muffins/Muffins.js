@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectMuffinsArray } from '../../redux/selectors';
-import { likeMuffin } from '../../redux/actions';
+import { likeMuffin, loadMuffins } from '../../redux/actions';
 
 const Muffins = () => {
     const muffins = useSelector(selectMuffinsArray);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(loadMuffins());
+    }, [])
+
     return (
         <ul>
             {muffins.map(muffin => {
