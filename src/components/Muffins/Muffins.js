@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectMuffinsArray, selectMuffinsLoading, selectMuffinsLoadError } from '../../redux/selectors';
-import { likeMuffin, loadMuffins } from '../../redux/actions';
+import { selectMuffinsArray, selectMuffinsLoading, selectMuffinsLoadError } from '../../redux/muffins';
+import { likeMuffin, loadMuffins } from '../../redux/muffins';
 
 const Muffins = () => {
     const muffins = useSelector(selectMuffinsArray);
     const muffinsLoading = useSelector(selectMuffinsLoading);
     const loadError = useSelector(selectMuffinsLoadError);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
