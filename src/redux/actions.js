@@ -22,6 +22,4 @@ export const loadMuffins = () => async (dispatch) => {
             error: 'Failed to load muffins'
         })
     }
-
-
 }
