@@ -1,13 +1,10 @@
-import { createStore, applyMiddleware, combineReducers } from "redux";
-import thunk from "redux-thunk";
+import { configureStore } from "@reduxjs/toolkit";
 import muffinsReducer from './muffins';
 
-const rootReducer = combineReducers({
-    muffins: muffinsReducer,
-});
-
-const store = createStore(
-    rootReducer, applyMiddleware(thunk)
-);
-
+const store = configureStore({
+    reducer: {
+        muffins: muffinsReducer
+    }
+})
+// We replaced createStore, applyMiddleware, combineReducers, and redux-thunk with a single function, configureStore. This function wraps the Redux createStore, adds default configuration and provides additional functionality for configuring the store.
 export default store;

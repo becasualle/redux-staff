@@ -1,3 +1,5 @@
+import { createReducer } from '@reduxjs/toolkit';
+
 // Actions 
 export const likeMuffin = muffinId => ({
     type: 'muffins/like',
@@ -36,28 +38,53 @@ const initialState = {
     muffins: [],
 };
 
-const reducer = (state = initialState, action) => {
-    switch (action.type) {
-        case 'muffins/like':
-            const { id } = action.payload;
-            const temp = state.muffins.map(muffin => {
-                if (muffin.id === id) {
-                    return { ...muffin, likes: muffin.likes + 1 }
-                }
-                return muffin;
-            })
-            return { ...state, muffins: temp };
-        case 'muffins/load_request':
-            return { ...state, muffinsLoading: true };
-        case 'muffins/load_success':
-            const { muffins } = action.payload;
-            return { ...state, muffinsLoading: false, muffins }
-        case 'muffins/load_failure':
-            const { error } = action;
-            return { ...state, muffinsLoading: false, error }
-        default:
-            return state;
-    }
-}
+// createReducer(initialState, caseReducers)
+// The first argument is the initial state and the second argument is an object that maps action types to reducer functions that handle that actions.
+const reducer = createReducer(initialState, {
+    'muffins/like': (state, action) => {
+        const { id } = action.payload;
+        const temp = state.muffins.map(muffin => {
+            if (muffin.id === id) {
+                return { ...muffin, likes: muffin.likes + 1 }
+            }
+            return muffin;
+        })
+        return { ...state, muffins: temp };
+    },
+    'muffins/load_request': (state, action) => {
+        return { ...state, muffinsLoading: true }
+    },
+    'muffins/load_success': (state, action) => {
+        const { muffins } = action.payload;
+        return { ...state, muffinsLoading: false, muffins }
+    },
+    'muffins/load_failure': (state, action) => {
+        const { error } = action;
+        return { ...state, muffinsLoading: false, error }
+    },
+})
+// const reducerOld = (state = initialState, action) => {
+//     switch (action.type) {
+//         case 'muffins/like':
+//             const { id } = action.payload;
+//             const temp = state.muffins.map(muffin => {
+//                 if (muffin.id === id) {
+//                     return { ...muffin, likes: muffin.likes + 1 }
+//                 }
+//                 return muffin;
+//             })
+//             return { ...state, muffins: temp };
+//         case 'muffins/load_request':
+//             return { ...state, muffinsLoading: true };
+//         case 'muffins/load_success':
+//             const { muffins } = action.payload;
+//             return { ...state, muffinsLoading: false, muffins }
+//         case 'muffins/load_failure':
+//             const { error } = action;
+//             return { ...state, muffinsLoading: false, error }
+//         default:
+//             return state;
+//     }
+// }
 
 export default reducer;
