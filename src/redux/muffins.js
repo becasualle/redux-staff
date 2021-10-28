@@ -1,31 +1,41 @@
-import { createReducer } from '@reduxjs/toolkit';
+import { createReducer, createAction, createAsyncThunk } from '@reduxjs/toolkit';
 
 // Actions 
-export const likeMuffin = muffinId => ({
-    type: 'muffins/like',
-    payload: { id: muffinId }
+// export const likeMuffin = muffinId => ({
+//     type: 'muffins/like',
+//     payload: { id: muffinId }
+// })
+
+// export const loadMuffins = () => async (dispatch) => {
+//     dispatch({
+//         type: 'muffins/load_request',
+//     });
+
+//     try {
+//         const response = await fetch('http://localhost:3001/muffins')
+//         const data = await response.json();
+
+//         dispatch({
+//             type: 'muffins/load_success',
+//             payload: { muffins: data }
+//         })
+//     } catch (e) {
+//         dispatch({
+//             type: 'muffins/load_failure',
+//             error: 'Failed to load muffins'
+//         })
+//     }
+// }
+
+export const likeMuffin = createAction('muffins/like', muffinId => {
+    return { payload: { id: muffinId } }
 })
 
-export const loadMuffins = () => async (dispatch) => {
-    dispatch({
-        type: 'muffins/load_request',
-    });
-
-    try {
-        const response = await fetch('http://localhost:3001/muffins')
-        const data = await response.json();
-
-        dispatch({
-            type: 'muffins/load_success',
-            payload: { muffins: data }
-        })
-    } catch (e) {
-        dispatch({
-            type: 'muffins/load_failure',
-            error: 'Failed to load muffins'
-        })
-    }
-}
+export const loadMuffins = createAsyncThunk('muffins/load', async () => {
+    const response = await fetch('http://localhost:3001/muffins');
+    const muffins = await response.json();
+    return { muffins }
+});
 
 // Selectors
 export const selectMuffinsState = (rootState) => rootState.muffins;
@@ -41,20 +51,20 @@ const initialState = {
 // createReducer(initialState, caseReducers)
 // The first argument is the initial state and the second argument is an object that maps action types to reducer functions that handle that actions.
 const reducer = createReducer(initialState, {
-    'muffins/like': (state, action) => {
+    [likeMuffin]: (state, action) => {
         const muffinToLike = state.muffins.find(muffin => muffin.id === action.payload.id)
         muffinToLike.likes += 1;
     },
-    'muffins/load_request': (state) => {
+    [loadMuffins.pending]: (state) => {
         state.muffinsLoading = true;
     },
-    'muffins/load_success': (state, action) => {
+    [loadMuffins.fulfilled]: (state, action) => {
         state.muffinsLoading = false;
         state.muffins = action.payload.muffins;
     },
-    'muffins/load_failure': (state, action) => {
+    [loadMuffins.rejected]: (state) => {
         state.muffinsLoading = false;
-        state.error = action.error;
+        state.error = 'Failed to load muffins.';
     },
 })
 
