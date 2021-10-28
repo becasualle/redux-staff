@@ -42,49 +42,20 @@ const initialState = {
 // The first argument is the initial state and the second argument is an object that maps action types to reducer functions that handle that actions.
 const reducer = createReducer(initialState, {
     'muffins/like': (state, action) => {
-        const { id } = action.payload;
-        const temp = state.muffins.map(muffin => {
-            if (muffin.id === id) {
-                return { ...muffin, likes: muffin.likes + 1 }
-            }
-            return muffin;
-        })
-        return { ...state, muffins: temp };
+        const muffinToLike = state.muffins.find(muffin => muffin.id === action.payload.id)
+        muffinToLike.likes += 1;
     },
-    'muffins/load_request': (state, action) => {
-        return { ...state, muffinsLoading: true }
+    'muffins/load_request': (state) => {
+        state.muffinsLoading = true;
     },
     'muffins/load_success': (state, action) => {
-        const { muffins } = action.payload;
-        return { ...state, muffinsLoading: false, muffins }
+        state.muffinsLoading = false;
+        state.muffins = action.payload.muffins;
     },
     'muffins/load_failure': (state, action) => {
-        const { error } = action;
-        return { ...state, muffinsLoading: false, error }
+        state.muffinsLoading = false;
+        state.error = action.error;
     },
 })
-// const reducerOld = (state = initialState, action) => {
-//     switch (action.type) {
-//         case 'muffins/like':
-//             const { id } = action.payload;
-//             const temp = state.muffins.map(muffin => {
-//                 if (muffin.id === id) {
-//                     return { ...muffin, likes: muffin.likes + 1 }
-//                 }
-//                 return muffin;
-//             })
-//             return { ...state, muffins: temp };
-//         case 'muffins/load_request':
-//             return { ...state, muffinsLoading: true };
-//         case 'muffins/load_success':
-//             const { muffins } = action.payload;
-//             return { ...state, muffinsLoading: false, muffins }
-//         case 'muffins/load_failure':
-//             const { error } = action;
-//             return { ...state, muffinsLoading: false, error }
-//         default:
-//             return state;
-//     }
-// }
 
 export default reducer;
